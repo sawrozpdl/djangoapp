@@ -1,0 +1,29 @@
+.container {
+    max-width: 900px;
+    margin : auto;
+}
+
+.content {
+    margin: 10px auto;
+    border: 1px solid lightcoral;
+    border-radius: 12px;
+    text-align: center;
+}
+
+li {
+    list-style: none;
+}
+
+h1 {
+    text-align: center; 
+    background : lightseagreen;
+}
+
+span {
+    display: block;
+}
+
+.date-container {
+    display: flex;
+    justify-content: space-around;
+}

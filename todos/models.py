@@ -11,7 +11,7 @@ class User(models.Model):
     deletedAt = models.DateTimeField(blank=True,null=True)
 
     def __str__(self):
-        return "{uid} => {userName}".format(uid=self.uid, userName=self.userName)
+        return self.userName
 
 
 class Todo(models.Model):
@@ -24,4 +24,4 @@ class Todo(models.Model):
     deletedAt = models.DateTimeField(blank=True,null=True)
 
     def __str__(self):
-        return "{tid} => {title} by : {userName}".format(tid=self.tid, title=self.title, userName=self.user.userName)
+        return self.title
