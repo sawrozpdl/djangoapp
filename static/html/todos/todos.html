@@ -1,0 +1,28 @@
+{% load static %}
+{% include "common/header.html" %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/todos.css' %}">
+
+<div class="jumbotron container">
+  <h1 class="display-4">{{ title }}</h1>
+  <p class="lead"> Click Show to display more about the todo! </p>
+</div>
+
+
+<div class= 'container'>
+    {%  if todos  %}
+        <ul class = "todo-list">
+            {% for todo in todos %}
+                <li class = "card w-50">
+                    <span class = 'card-header'>{{todo.title}}</span>
+                    <a class = 'btn btn-primary' href = "{% url 'todos:id' todo.tid %}">Show</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h2>NO content here!</h2>
+    {% endif %}
+</div>
+
+
+
+

@@ -1,0 +1,16 @@
+{% load static %}
+
+{% include "common/header.html" %}
+
+<div class = "container">
+    <div class = "card">
+    <span class = 'card-header'>{{todo.title}}</span>
+    <span class = 'card-body'>{{todo.content}}</span>
+    <div class = 'card-footer clearfix'>
+        <span class = 'date-created float-left'>Date Created: {{todo.dateCreated}}</span>
+        <span class = 'date-modified float-right'>Date Modified: {{todo.dateModified}}</span>
+    </div>
+</div>
+</div>
+
+ 

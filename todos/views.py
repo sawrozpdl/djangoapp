@@ -5,14 +5,14 @@ from .models import Todo, User
 
 def index(request):
     todos = Todo.objects.all()
-    template = loader.get_template('todos/index.html')
+    template = loader.get_template('todos/todos.html')
     content = {
-        'title' : 'Todos Created by users across this site',
+        'title' : 'Todos by Users:',
         'todos' : todos
     }
     return HttpResponse(template.render(content, request))
 
-def showTodo(request, todoId):
+def show_todo(request, todoId):
     todo = Todo.objects.get(tid=todoId);
     template = loader.get_template('todos/todo.html')
     content = {
@@ -20,5 +20,8 @@ def showTodo(request, todoId):
     }
     return HttpResponse(template.render(content, request)) # content is the context
 
-def action(request, todoId, action):
-    return HttpResponse('You are Doing action: {action} viewing : {id}'.format(id=todoId, action=action))
+
+def create(request):
+    return HttpResponse(loader.get_template('todos/createTodo.html').render({
+        'guide' : 'Fill out your todo'
+    }, request))
