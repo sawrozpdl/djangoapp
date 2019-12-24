@@ -25,3 +25,6 @@ class Todo(models.Model):
 
     def __str__(self):
         return self.title
+
+    def containsTag(self, tag):
+        return (tag.lower() in self.title.lower()) | (tag.lower() in self.content.lower())

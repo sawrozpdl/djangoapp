@@ -16,6 +16,12 @@
         <div class = 'alert alert-success'> {{success}} </div>
     {% elif guide %}
         <div class = 'alert alert-warning'> {{guide}} </div>
+    {% elif searchQuery %}
+        {% if not hasResults %}
+            <div class = 'alert alert-warning'> No results found for '{{searchQuery}}' </div>
+        {% else %}
+            <div class = 'alert alert-secondary'> Search results for '{{searchQuery}}' </div>
+        {% endif %}
     {% endif %}
 
     {%  if todos  %}
@@ -27,8 +33,8 @@
                 </li>
             {% endfor %}
         </ul>
-    {% else %}
-        <h2>NO content here!</h2>
+    {% elif not searchQuery %}
+        <div class = 'alert alert-warning'> No Todos! Go to Create Todo to add some </div>
     {% endif %}
 </div>
 
