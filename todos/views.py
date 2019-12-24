@@ -25,3 +25,23 @@ def create(request):
     return HttpResponse(loader.get_template('todos/createTodo.html').render({
         'guide' : 'Fill out your todo'
     }, request))
+
+
+def postTodo(request):
+    User.objects.all()[0].todo_set.create(title = request.POST['title'], content = request.POST['content'])    
+    return HttpResponse(loader.get_template('todos/createTodo.html').render({
+        'success' : 'Todo creation successful!'
+    }, request))
+
+
+def deleteTodo(request, todoId):
+    Todo.objects.get(tid=todoId).delete()
+    todos = Todo.objects.all()
+    template = loader.get_template('todos/todos.html')
+    content = {
+        'title' : 'Todos by Users:',
+        'todos' : todos,
+        'success' : 'todo deletion successfull!'
+    }
+    return HttpResponse(template.render(content, request))
+    

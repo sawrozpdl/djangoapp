@@ -2,6 +2,7 @@
 {% include "common/header.html" %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/todos.css' %}">
 
+
 <div class="jumbotron container">
   <h1 class="display-4">{{ title }}</h1>
   <p class="lead"> Click Show to display more about the todo! </p>
@@ -9,6 +10,14 @@
 
 
 <div class= 'container'>
+    {% if error %}
+        <div class = 'alert alert-danger'> {{error}} </div>
+    {% elif success %}
+        <div class = 'alert alert-success'> {{success}} </div>
+    {% elif guide %}
+        <div class = 'alert alert-warning'> {{guide}} </div>
+    {% endif %}
+
     {%  if todos  %}
         <ul class = "todo-list">
             {% for todo in todos %}

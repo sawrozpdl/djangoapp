@@ -4,7 +4,10 @@
 
 <div class = "container">
     <div class = "card">
-    <span class = 'card-header'>{{todo.title}}</span>
+    <div class = 'card-header'>
+        <span class = "float-left">{{todo.title}}</span>
+        <a href = "{% url 'todos:deleteTodo' todo.tid %}"><i class = "float-right fa fa-trash"></i></a>
+    </div>
     <span class = 'card-body'>{{todo.content}}</span>
     <div class = 'card-footer clearfix'>
         <span class = 'date-created float-left'>Date Created: {{todo.dateCreated}}</span>
