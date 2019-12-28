@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    environment:
+        - DEBUG=${DEBUG}
+        - SECRET_KEY=${SECRET_KEY}
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/src
+    ports:
+      - "8080:8000"
