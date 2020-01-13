@@ -7,17 +7,53 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      - checkout
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
+        - checkout
 
-      - run:
-          name: run tests
-          command: |
-            . venv/bin/activate
-            export $(cat .env)
-            python3 manage.py test
+        - setup_remote_docker:
+            docker_layer_caching: false
+
+        - run:
+            name: Setup Stage
+            command: |
+                if [ $CIRCLE_BRANCH == "dev" ]
+                then
+                    echo 'export STAGE=development' >> ~/.bashrc
+                elif [ $CIRCLE_BRANCH == "master" ]
+                then
+                    echo 'export STAGE=production' >> ~/.bashrc
+                else
+                    echo "No stage provided!"
+                fi
+
+        - run:
+            name: install dependencies
+            command: |
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install -r requirements.txt
+
+        - run:
+            name: run tests
+            command: |
+                . venv/bin/activate
+                export $(cat .env)
+                python3 manage.py test
+                
+        - run:
+            name: "Install Heroku CLI, if necessary"
+            command: |
+                if [[ $(command -v heroku) == "" ]]; then
+                curl https://cli-assets.heroku.com/install.sh | sh
+                else
+                echo "Heroku is already installed. No operation was performed."
+                fi
+    
+        - run:
+            name: Login into Heroku Docker Repository
+            command: |
+                docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+        - run:
+            name: Deploy Heroku Docker Container
+            command: |
+                heroku container:push web -a sawtodo
+                heroku container:release web -a sawtodo
