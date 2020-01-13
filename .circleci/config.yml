@@ -23,6 +23,7 @@ jobs:
                     echo 'export STAGE=production' >> ~/.bashrc
                 else
                     echo "No stage provided!"
+                fi
 
         - run:
             name: install dependencies
