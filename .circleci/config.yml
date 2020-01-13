@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
@@ -8,6 +8,19 @@ jobs:
 
     steps:
       - checkout
+
+      - run:
+        name: Setup Stage
+        command: |
+          if [ $CIRCLE_BRANCH == "dev" ]
+          then
+            export STAGE=development
+          elif [ $CIRCLE_BRANCH == "master" ]
+          then
+            export STAGE=production
+          else
+            echo "No stage provided!"
+
       - run:
           name: install dependencies
           command: |
@@ -21,3 +34,43 @@ jobs:
             . venv/bin/activate
             export $(cat .env)
             python3 manage.py test
+
+      - setup_remote_docker
+
+    install_dependencies:
+        steps:
+        - restore_cache:
+            keys:
+                - v1-dependencies-{{ checksum "requirements/production.txt" }}
+                - v1-dependencies- # fallback to using the latest cache if no exact match is found
+        - run:
+            name: "Install Heroku CLI, if necessary"
+            command: |
+                if [[ $(command -v heroku) == "" ]]; then
+                curl https://cli-assets.heroku.com/install.sh | sh
+                else
+                echo "Heroku is already installed. No operation was performed."
+                fi
+    
+    docker-build-release:
+        parameters:
+        app-name:
+            description: "The Heroku app name to which the application should be deployed"
+            type: string
+        app-arg:
+            description: "The Heroku Dockerfile args"
+            type: string
+        app-type:
+            description: "The Heroku app type (web or worker) of the application to be deployed"
+            type: string
+            default: "web"
+        steps:
+        - run:
+            name: Login into Heroku Docker Repository
+            command: |
+                docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+        - run:
+            name: Deploy Heroku Docker Container
+            command: |
+                heroku container:push web -a sawtodo
+                heroku container:release web -a sawtodo
