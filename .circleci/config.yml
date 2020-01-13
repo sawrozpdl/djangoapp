@@ -17,10 +17,10 @@ jobs:
             command: |
                 if [ $CIRCLE_BRANCH == "dev" ]
                 then
-                    echo "export STAGE=development" >> ~/.bashrc
+                    echo 'export STAGE=development' >> ~/.bashrc
                 elif [ $CIRCLE_BRANCH == "master" ]
                 then
-                    echo "export STAGE=production" >> ~/.bashrc
+                    echo 'export STAGE=production' >> ~/.bashrc
                 else
                     echo "No stage provided!"
 
