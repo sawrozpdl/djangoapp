@@ -1,4 +1,4 @@
-version: 2.1
+version: 2
 jobs:
   build:
     docker:
@@ -7,38 +7,37 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      - checkout
+        - checkout
 
-      - run:
-        name: Setup Stage
-        command: |
-          if [ $CIRCLE_BRANCH == "dev" ]
-          then
-            export STAGE=development
-          elif [ $CIRCLE_BRANCH == "master" ]
-          then
-            export STAGE=production
-          else
-            echo "No stage provided!"
+        - setup_remote_docker:
+            docker_layer_caching: true
 
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
+        - run:
+            name: Setup Stage
+            command: |
+            if [ $CIRCLE_BRANCH == "dev" ]
+            then
+                echo "export STAGE=development" >> ~/.bashrc
+            elif [ $CIRCLE_BRANCH == "master" ]
+            then
+                echo "export STAGE=production" >> ~/.bashrc
+            else
+                echo "No stage provided!"
 
-      - run:
-          name: run tests
-          command: |
-            . venv/bin/activate
-            export $(cat .env)
-            python3 manage.py test
+        - run:
+            name: install dependencies
+            command: |
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install -r requirements.txt
 
-      - setup_remote_docker
+        - run:
+            name: run tests
+            command: |
+                . venv/bin/activate
+                export $(cat .env)
+                python3 manage.py test
 
-    install_dependencies:
-        steps:
         - restore_cache:
             keys:
                 - v1-dependencies-{{ checksum "requirements/production.txt" }}
@@ -52,19 +51,6 @@ jobs:
                 echo "Heroku is already installed. No operation was performed."
                 fi
     
-    docker-build-release:
-        parameters:
-        app-name:
-            description: "The Heroku app name to which the application should be deployed"
-            type: string
-        app-arg:
-            description: "The Heroku Dockerfile args"
-            type: string
-        app-type:
-            description: "The Heroku app type (web or worker) of the application to be deployed"
-            type: string
-            default: "web"
-        steps:
         - run:
             name: Login into Heroku Docker Repository
             command: |
