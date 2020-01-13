@@ -38,11 +38,7 @@ jobs:
                 . venv/bin/activate
                 export $(cat .env)
                 python3 manage.py test
-
-        - restore_cache:
-            keys:
-                - v1-dependencies-{{ checksum "requirements/production.txt" }}
-                - v1-dependencies- # fallback to using the latest cache if no exact match is found
+                
         - run:
             name: "Install Heroku CLI, if necessary"
             command: |
