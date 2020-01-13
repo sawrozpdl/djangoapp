@@ -8,7 +8,7 @@ def index(request):
     todos = list(filter(lambda todo : todo.containsTag(searchQuery), Todo.objects.all())) if searchQuery else Todo.objects.all()
     template = loader.get_template('todos/todos.html')
     content = {
-        'title' : 'This is a huge success for me LOL!',
+        'title' : 'Todos by Users',
         'todos' : todos,
         'searchQuery' : request.POST.get('searchQuery', False),
         'hasResults' : True if (len(todos) > 0) else False
